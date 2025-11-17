@@ -324,6 +324,7 @@ npm run test
 -   **Deploy Time**: ~3 minutes
 
 **Quick Deploy**:
+
 ```bash
 # Option 1: Vercel CLI
 cd frontend
