@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,7 +10,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CheckCircle2, ChevronRight, ChevronLeft, User, DollarSign, FileText, Award, CheckSquare, Home, AlertCircle } from "lucide-react";
+import { CheckCircle2, ChevronRight, ChevronLeft, User, DollarSign, FileText, Award, CheckSquare, Home, AlertCircle, Save, Clock, X, Eye, Download, Loader2 } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { toast } from "sonner";
+import * as applicationUtils from "@/lib/application-utils";
 
 const personalInfoSchema = z.object({
     fullName: z.string().min(2, "Tên phải có ít nhất 2 ký tự"),
@@ -53,6 +56,12 @@ export default function NewApplicationPage() {
     const { user } = useAuthStore();
     const [currentStep, setCurrentStep] = useState<Step>(1);
     const [formData, setFormData] = useState<any>({});
+    const [lastSaved, setLastSaved] = useState<number | null>(null);
+    const [isSaving, setIsSaving] = useState(false);
+    const [showSubmitModal, setShowSubmitModal] = useState(false);
+    const [trackingNumber, setTrackingNumber] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [uploadedDocs, setUploadedDocs] = useState<{ [key: string]: applicationUtils.UploadedDocument }>({});
 
     // Step 1: Personal Info
     const personalForm = useForm({
@@ -97,6 +106,108 @@ export default function NewApplicationPage() {
         },
     });
 
+    // Load draft on mount
+    useEffect(() => {
+        const draft = applicationUtils.loadDraft();
+        if (draft) {
+            setFormData(draft);
+            setCurrentStep(draft.step as Step);
+            setLastSaved(draft.lastSaved || null);
+
+            // Populate forms with draft data
+            if (draft.personalInfo) {
+                Object.entries(draft.personalInfo).forEach(([key, value]) => {
+                    personalForm.setValue(key as any, value);
+                });
+            }
+            if (draft.incomeHousing) {
+                Object.entries(draft.incomeHousing).forEach(([key, value]) => {
+                    incomeForm.setValue(key as any, value);
+                });
+            }
+            if (draft.priority) {
+                Object.entries(draft.priority).forEach(([key, value]) => {
+                    priorityForm.setValue(key as any, value);
+                });
+            }
+
+            toast.success("Đã khôi phục bản nháp");
+        }
+    }, []);
+
+    // Auto-save draft every 30 seconds
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (currentStep < 5 && Object.keys(formData).length > 0) {
+                saveDraftData();
+            }
+        }, 30000); // 30 seconds
+
+        return () => clearInterval(interval);
+    }, [formData, currentStep]);
+
+    // Save draft function
+    const saveDraftData = () => {
+        setIsSaving(true);
+        const draft: applicationUtils.ApplicationDraft = {
+            step: currentStep,
+            personalInfo: formData,
+            incomeHousing: formData,
+            priority: formData,
+        };
+        applicationUtils.saveDraft(draft);
+        setLastSaved(Date.now());
+
+        setTimeout(() => {
+            setIsSaving(false);
+        }, 500);
+    };
+
+    // Handle file upload with preview
+    const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        // Validate file
+        const validation = applicationUtils.validateFileUpload(file);
+        if (!validation.valid) {
+            toast.error(validation.error || "File không hợp lệ");
+            event.target.value = "";
+            return;
+        }
+
+        try {
+            // Create preview
+            const preview = await applicationUtils.createDocumentPreview(file);
+
+            const doc: applicationUtils.UploadedDocument = {
+                id: Math.random().toString(36).substring(7),
+                name: file.name,
+                file: file,
+                preview: preview,
+                size: file.size,
+                type: file.type,
+                uploadedAt: Date.now(),
+            };
+
+            setUploadedDocs((prev) => ({ ...prev, [fieldName]: doc }));
+            toast.success(`Đã tải lên ${file.name}`);
+        } catch (error) {
+            toast.error("Không thể tải lên file");
+            console.error(error);
+        }
+    };
+
+    // Remove uploaded document
+    const removeDocument = (fieldName: string) => {
+        setUploadedDocs((prev) => {
+            const updated = { ...prev };
+            delete updated[fieldName];
+            return updated;
+        });
+        toast.info("Đã xóa tài liệu");
+    };
+
     const steps = [
         { number: 1, title: "Thông tin cá nhân", icon: User, description: "CMND/CCCD, địa chỉ" },
         { number: 2, title: "Thu nhập & Nhà ở", icon: DollarSign, description: "Việc làm, gia đình" },
@@ -106,30 +217,101 @@ export default function NewApplicationPage() {
     ];
 
     const handleStep1Next = personalForm.handleSubmit((data) => {
-        setFormData({ ...formData, ...data });
+        const updatedData = { ...formData, ...data };
+        setFormData(updatedData);
+
+        // Save draft
+        applicationUtils.saveDraft({
+            step: 2,
+            personalInfo: data,
+        });
+        setLastSaved(Date.now());
+
         setCurrentStep(2);
+        toast.success("Đã lưu thông tin cá nhân");
     });
 
     const handleStep2Next = incomeForm.handleSubmit((data) => {
-        setFormData({ ...formData, ...data });
+        const updatedData = { ...formData, ...data };
+        setFormData(updatedData);
+
+        // Save draft
+        applicationUtils.saveDraft({
+            step: 3,
+            personalInfo: formData,
+            incomeHousing: data,
+        });
+        setLastSaved(Date.now());
+
         setCurrentStep(3);
+        toast.success("Đã lưu thông tin thu nhập");
     });
 
     const handleStep3Next = documentsForm.handleSubmit((data) => {
-        setFormData({ ...formData, ...data });
+        // Check if required documents are uploaded
+        const requiredDocs = ["idCardFront", "idCardBack", "incomeProof", "householdBook"];
+        const missingDocs = requiredDocs.filter((doc) => !uploadedDocs[doc]);
+
+        if (missingDocs.length > 0) {
+            toast.error("Vui lòng tải lên tất cả tài liệu bắt buộc");
+            return;
+        }
+
+        const updatedData = { ...formData, ...data };
+        setFormData(updatedData);
+
+        // Save draft
+        applicationUtils.saveDraft({
+            step: 4,
+            personalInfo: formData,
+            incomeHousing: formData,
+        });
+        setLastSaved(Date.now());
+
         setCurrentStep(4);
+        toast.success("Đã lưu tài liệu");
     });
 
     const handleStep4Next = priorityForm.handleSubmit((data) => {
-        setFormData({ ...formData, ...data });
+        const updatedData = { ...formData, ...data };
+        setFormData(updatedData);
+
+        // Save draft
+        applicationUtils.saveDraft({
+            step: 5,
+            personalInfo: formData,
+            incomeHousing: formData,
+            priority: data,
+        });
+        setLastSaved(Date.now());
+
         setCurrentStep(5);
+        toast.success("Đã lưu thông tin ưu tiên");
     });
 
     const handleFinalSubmit = () => {
-        // Mock submit - in production, call API
-        console.log("Final submission:", formData);
-        alert("Hồ sơ đã được nộp thành công! Chúng tôi sẽ xem xét trong vòng 2-5 ngày làm việc.");
-        router.push("/buyer/dashboard");
+        setTrackingNumber(applicationUtils.generateTrackingNumber());
+        setShowSubmitModal(true);
+    };
+
+    const confirmSubmit = () => {
+        setIsSubmitting(true);
+
+        // Mock API call
+        setTimeout(() => {
+            // Clear draft after successful submission
+            applicationUtils.clearDraft();
+
+            setIsSubmitting(false);
+            setShowSubmitModal(false);
+
+            toast.success("Hồ sơ đã được nộp thành công!");
+
+            // Redirect after 2 seconds
+            setTimeout(() => {
+                router.push("/buyer/dashboard");
+            }, 2000);
+        }, 2000);
     };
 
     return (
@@ -137,10 +319,35 @@ export default function NewApplicationPage() {
             <div className="max-w-5xl mx-auto px-6">
                 {/* Header */}
                 <div className="mb-8">
-                    <Button variant="ghost" onClick={() => router.back()} className="mb-4">
-                        <ChevronLeft className="h-4 w-4 mr-1" />
-                        Quay lại
-                    </Button>
+                    <div className="flex items-center justify-between mb-4">
+                        <Button variant="ghost" onClick={() => router.back()}>
+                            <ChevronLeft className="h-4 w-4 mr-1" />
+                            Quay lại
+                        </Button>
+
+                        {/* Auto-save indicator */}
+                        <div className="flex items-center gap-4">
+                            {lastSaved && (
+                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                    <Clock className="h-4 w-4" />
+                                    <span>Đã lưu {applicationUtils.formatLastSavedTime(lastSaved)}</span>
+                                </div>
+                            )}
+
+                            {isSaving && (
+                                <div className="flex items-center gap-2 text-sm text-blue-600">
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                    <span>Đang lưu...</span>
+                                </div>
+                            )}
+
+                            <Button variant="outline" size="sm" onClick={saveDraftData} disabled={isSaving}>
+                                <Save className="h-4 w-4 mr-2" />
+                                Lưu nháp
+                            </Button>
+                        </div>
+                    </div>
+
                     <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
                         <Home className="h-8 w-8 text-blue-600" />
                         Nộp hồ sơ đăng ký mua NOXH
@@ -332,34 +539,124 @@ export default function NewApplicationPage() {
                                 </div>
 
                                 <div className="space-y-4">
+                                    {/* ID Card Front */}
                                     <div className="border rounded-lg p-4">
                                         <Label className="text-base font-semibold mb-2 block">CMND/CCCD (Mặt trước) *</Label>
-                                        <Input type="file" accept="image/*,application/pdf" />
-                                        <p className="text-xs text-gray-500 mt-1">Hình ảnh rõ nét mặt trước CMND/CCCD</p>
+                                        {uploadedDocs.idCardFront ? (
+                                            <div className="flex items-center gap-4 p-3 bg-green-50 border border-green-200 rounded">
+                                                {uploadedDocs.idCardFront.preview && uploadedDocs.idCardFront.type.startsWith("image/") && (
+                                                    <img src={uploadedDocs.idCardFront.preview} alt="Preview" className="h-20 w-32 object-cover rounded" />
+                                                )}
+                                                <div className="flex-1">
+                                                    <p className="font-medium text-sm">{uploadedDocs.idCardFront.name}</p>
+                                                    <p className="text-xs text-gray-600">{applicationUtils.formatFileSize(uploadedDocs.idCardFront.size)}</p>
+                                                </div>
+                                                <Button variant="ghost" size="sm" onClick={() => removeDocument("idCardFront")}>
+                                                    <X className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <Input type="file" accept="image/*,application/pdf" onChange={(e) => handleFileUpload(e, "idCardFront")} />
+                                                <p className="text-xs text-gray-500 mt-1">Hình ảnh rõ nét mặt trước CMND/CCCD</p>
+                                            </>
+                                        )}
                                     </div>
 
+                                    {/* ID Card Back */}
                                     <div className="border rounded-lg p-4">
                                         <Label className="text-base font-semibold mb-2 block">CMND/CCCD (Mặt sau) *</Label>
-                                        <Input type="file" accept="image/*,application/pdf" />
-                                        <p className="text-xs text-gray-500 mt-1">Hình ảnh rõ nét mặt sau CMND/CCCD</p>
+                                        {uploadedDocs.idCardBack ? (
+                                            <div className="flex items-center gap-4 p-3 bg-green-50 border border-green-200 rounded">
+                                                {uploadedDocs.idCardBack.preview && uploadedDocs.idCardBack.type.startsWith("image/") && (
+                                                    <img src={uploadedDocs.idCardBack.preview} alt="Preview" className="h-20 w-32 object-cover rounded" />
+                                                )}
+                                                <div className="flex-1">
+                                                    <p className="font-medium text-sm">{uploadedDocs.idCardBack.name}</p>
+                                                    <p className="text-xs text-gray-600">{applicationUtils.formatFileSize(uploadedDocs.idCardBack.size)}</p>
+                                                </div>
+                                                <Button variant="ghost" size="sm" onClick={() => removeDocument("idCardBack")}>
+                                                    <X className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <Input type="file" accept="image/*,application/pdf" onChange={(e) => handleFileUpload(e, "idCardBack")} />
+                                                <p className="text-xs text-gray-500 mt-1">Hình ảnh rõ nét mặt sau CMND/CCCD</p>
+                                            </>
+                                        )}
                                     </div>
 
+                                    {/* Income Proof */}
                                     <div className="border rounded-lg p-4">
                                         <Label className="text-base font-semibold mb-2 block">Giấy xác nhận thu nhập *</Label>
-                                        <Input type="file" accept="image/*,application/pdf" />
-                                        <p className="text-xs text-gray-500 mt-1">Giấy xác nhận từ đơn vị công tác hoặc hợp đồng lao động + bảng lương 3 tháng gần nhất</p>
+                                        {uploadedDocs.incomeProof ? (
+                                            <div className="flex items-center gap-4 p-3 bg-green-50 border border-green-200 rounded">
+                                                {uploadedDocs.incomeProof.preview && uploadedDocs.incomeProof.type.startsWith("image/") && (
+                                                    <img src={uploadedDocs.incomeProof.preview} alt="Preview" className="h-20 w-32 object-cover rounded" />
+                                                )}
+                                                <div className="flex-1">
+                                                    <p className="font-medium text-sm">{uploadedDocs.incomeProof.name}</p>
+                                                    <p className="text-xs text-gray-600">{applicationUtils.formatFileSize(uploadedDocs.incomeProof.size)}</p>
+                                                </div>
+                                                <Button variant="ghost" size="sm" onClick={() => removeDocument("incomeProof")}>
+                                                    <X className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <Input type="file" accept="image/*,application/pdf" onChange={(e) => handleFileUpload(e, "incomeProof")} />
+                                                <p className="text-xs text-gray-500 mt-1">Giấy xác nhận từ đơn vị công tác hoặc hợp đồng lao động + bảng lương 3 tháng gần nhất</p>
+                                            </>
+                                        )}
                                     </div>
 
+                                    {/* Household Book */}
                                     <div className="border rounded-lg p-4">
                                         <Label className="text-base font-semibold mb-2 block">Sổ hộ khẩu *</Label>
-                                        <Input type="file" accept="image/*,application/pdf" />
-                                        <p className="text-xs text-gray-500 mt-1">Ảnh chụp tất cả các trang có thông tin trong sổ</p>
+                                        {uploadedDocs.householdBook ? (
+                                            <div className="flex items-center gap-4 p-3 bg-green-50 border border-green-200 rounded">
+                                                {uploadedDocs.householdBook.preview && uploadedDocs.householdBook.type.startsWith("image/") && (
+                                                    <img src={uploadedDocs.householdBook.preview} alt="Preview" className="h-20 w-32 object-cover rounded" />
+                                                )}
+                                                <div className="flex-1">
+                                                    <p className="font-medium text-sm">{uploadedDocs.householdBook.name}</p>
+                                                    <p className="text-xs text-gray-600">{applicationUtils.formatFileSize(uploadedDocs.householdBook.size)}</p>
+                                                </div>
+                                                <Button variant="ghost" size="sm" onClick={() => removeDocument("householdBook")}>
+                                                    <X className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <Input type="file" accept="image/*,application/pdf" onChange={(e) => handleFileUpload(e, "householdBook")} />
+                                                <p className="text-xs text-gray-500 mt-1">Ảnh chụp tất cả các trang có thông tin trong sổ</p>
+                                            </>
+                                        )}
                                     </div>
 
+                                    {/* Marriage Certificate (Optional) */}
                                     <div className="border rounded-lg p-4">
                                         <Label className="text-base font-semibold mb-2 block">Giấy chứng nhận kết hôn (nếu có)</Label>
-                                        <Input type="file" accept="image/*,application/pdf" />
-                                        <p className="text-xs text-gray-500 mt-1">Bắt buộc nếu bạn đã kết hôn</p>
+                                        {uploadedDocs.marriageCertificate ? (
+                                            <div className="flex items-center gap-4 p-3 bg-green-50 border border-green-200 rounded">
+                                                {uploadedDocs.marriageCertificate.preview && uploadedDocs.marriageCertificate.type.startsWith("image/") && (
+                                                    <img src={uploadedDocs.marriageCertificate.preview} alt="Preview" className="h-20 w-32 object-cover rounded" />
+                                                )}
+                                                <div className="flex-1">
+                                                    <p className="font-medium text-sm">{uploadedDocs.marriageCertificate.name}</p>
+                                                    <p className="text-xs text-gray-600">{applicationUtils.formatFileSize(uploadedDocs.marriageCertificate.size)}</p>
+                                                </div>
+                                                <Button variant="ghost" size="sm" onClick={() => removeDocument("marriageCertificate")}>
+                                                    <X className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <Input type="file" accept="image/*,application/pdf" onChange={(e) => handleFileUpload(e, "marriageCertificate")} />
+                                                <p className="text-xs text-gray-500 mt-1">Bắt buộc nếu bạn đã kết hôn</p>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
 
@@ -541,6 +838,92 @@ export default function NewApplicationPage() {
                         )}
                     </CardContent>
                 </Card>
+
+                {/* Submission Confirmation Modal */}
+                <Dialog open={showSubmitModal} onOpenChange={setShowSubmitModal}>
+                    <DialogContent className="sm:max-w-lg">
+                        <DialogHeader>
+                            <DialogTitle className="flex items-center gap-2 text-2xl">
+                                <CheckCircle2 className="h-6 w-6 text-green-600" />
+                                Xác nhận nộp hồ sơ
+                            </DialogTitle>
+                            <DialogDescription>Vui lòng kiểm tra kỹ thông tin trước khi xác nhận. Sau khi nộp, bạn không thể chỉnh sửa hồ sơ.</DialogDescription>
+                        </DialogHeader>
+
+                        <div className="space-y-4 py-4">
+                            {/* Tracking Number */}
+                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <p className="text-sm text-gray-600 mb-1">Mã hồ sơ của bạn</p>
+                                <div className="flex items-center gap-2">
+                                    <code className="text-xl font-bold text-blue-600">{trackingNumber}</code>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => {
+                                            navigator.clipboard.writeText(trackingNumber);
+                                            toast.success("Đã sao chép mã hồ sơ");
+                                        }}
+                                    >
+                                        <Download className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                                <p className="text-xs text-gray-500 mt-2">Lưu lại mã này để tra cứu trạng thái hồ sơ</p>
+                            </div>
+
+                            {/* Application Summary */}
+                            <div className="space-y-3">
+                                <div className="flex items-center justify-between py-2 border-b">
+                                    <span className="text-sm text-gray-600">Họ tên</span>
+                                    <span className="font-medium">{formData.fullName}</span>
+                                </div>
+                                <div className="flex items-center justify-between py-2 border-b">
+                                    <span className="text-sm text-gray-600">CMND/CCCD</span>
+                                    <span className="font-medium">{formData.idNumber}</span>
+                                </div>
+                                <div className="flex items-center justify-between py-2 border-b">
+                                    <span className="text-sm text-gray-600">Thu nhập</span>
+                                    <span className="font-medium">{parseInt(formData.monthlyIncome || "0").toLocaleString("vi-VN")} VNĐ</span>
+                                </div>
+                                <div className="flex items-center justify-between py-2 border-b">
+                                    <span className="text-sm text-gray-600">Số tài liệu</span>
+                                    <span className="font-medium">{Object.keys(uploadedDocs).length} file</span>
+                                </div>
+                            </div>
+
+                            {/* Processing Timeline */}
+                            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                                <div className="flex items-start gap-3">
+                                    <Clock className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                                    <div className="text-sm text-amber-900">
+                                        <p className="font-medium mb-1">Thời gian xử lý</p>
+                                        <p>
+                                            Hồ sơ của bạn sẽ được xem xét trong vòng <strong>2-5 ngày làm việc</strong>. Chúng tôi sẽ thông báo kết quả qua email và SMS.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <DialogFooter>
+                            <Button variant="outline" onClick={() => setShowSubmitModal(false)} disabled={isSubmitting}>
+                                Hủy
+                            </Button>
+                            <Button className="bg-green-600 hover:bg-green-700" onClick={confirmSubmit} disabled={isSubmitting}>
+                                {isSubmitting ? (
+                                    <>
+                                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                        Đang nộp...
+                                    </>
+                                ) : (
+                                    <>
+                                        <CheckCircle2 className="h-4 w-4 mr-2" />
+                                        Xác nhận nộp hồ sơ
+                                    </>
+                                )}
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </div>
         </div>
     );

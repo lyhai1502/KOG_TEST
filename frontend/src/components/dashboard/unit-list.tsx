@@ -67,7 +67,7 @@ export function UnitList({ units, isLoading, pagination }: UnitListProps) {
         <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {units.map((unit) => (
-                    <Card key={unit.id} className="hover:shadow-lg transition-shadow">
+                    <Card key={unit.id} className="hover:shadow-lg transition-all duration-300">
                         <CardHeader>
                             <div className="flex items-center justify-between">
                                 <CardTitle className="flex items-center gap-2">

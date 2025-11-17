@@ -203,6 +203,7 @@ export interface Listing {
     description: string;
     price: number;
     negotiable: boolean;
+    images?: string[];
 
     // Legal Status
     legalStatus: "ĐỦ_SỔ" | "ĐANG_LÀM_SỔ" | "CHƯA_CÓ_SỔ";
@@ -230,6 +231,7 @@ export type TransactionStatus =
     | "PAYMENT_PENDING" // Chờ thanh toán
     | "PAYMENT_COMPLETED" // Đã thanh toán
     | "DOCUMENT_SIGNING" // Ký giấy tờ
+    | "TRANSFERRING" // Đang chuyển nhượng
     | "COMPLETED" // Hoàn thành
     | "CANCELLED"; // Đã hủy
 
@@ -244,11 +246,13 @@ export interface Transaction {
 
     // Transaction Details
     agreedPrice: number;
+    propertyPrice: number;
     depositAmount: number;
     depositPaidAt?: string;
 
     // Fees & Taxes
     transferTax: number;
+    taxAmount: number;
     serviceFee: number;
     otherFees: number;
     totalAmount: number;
@@ -265,6 +269,8 @@ export interface Transaction {
 
     // Timeline
     initiatedAt: string;
+    paymentCompletedAt?: string;
+    documentSignedAt?: string;
     completedAt?: string;
     cancelledAt?: string;
     cancellationReason?: string;
@@ -297,15 +303,4 @@ export interface ActivityLog {
     description: string;
     metadata?: any;
     createdAt: string;
-}
-
-// ========================================
-// MARKETPLACE EXTENSIONS
-// ========================================
-
-export interface Wishlist {
-    id: string;
-    userId: string;
-    listingId: string;
-    addedAt: string;
 }

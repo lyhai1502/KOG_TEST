@@ -1,4 +1,316 @@
 // Mock data for testing without backend
+
+// PRIMARY MARKET: New projects from developers (CĐT)
+export const MOCK_PROJECTS = [
+    {
+        id: "proj-1",
+        name: "Kim Oanh Green Park",
+        slug: "kim-oanh-green-park-primary",
+        description: "Dự án Nhà ở Xã hội mới tại Quận 9 - Giai đoạn sơ cấp",
+        developer: "Kim Oanh Group",
+        district: "Quận 9",
+        city: "TP. Hồ Chí Minh",
+        address: "Đường Đỗ Xuân Hợp, P. Phước Long B, Quận 9",
+        totalUnits: 450,
+        availableUnits: 120,
+        priceRange: {
+            min: 800000000,
+            max: 1500000000,
+        },
+        startDate: "2024-06-01",
+        completionDate: "2026-03-31",
+        status: "SELLING" as const,
+        legalStatus: "Đang hoàn thiện thủ tục",
+        amenities: ["Hồ bơi", "Phòng gym", "Khu vui chơi trẻ em", "Siêu thị", "Bãi đỗ xe ngầm"],
+        images: [
+            "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop&auto=format",
+            "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop&auto=format",
+            "https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=800&h=600&fit=crop&auto=format",
+        ],
+        lotteryDate: "2025-02-15",
+        createdAt: "2024-06-01T00:00:00.000Z",
+        updatedAt: "2025-01-20T00:00:00.000Z",
+    },
+    {
+        id: "proj-2",
+        name: "Sunview Town",
+        slug: "sunview-town-primary",
+        description: "Dự án ven sông tại Thủ Đức - Mở bán giai đoạn 1",
+        developer: "Kim Oanh Group",
+        district: "Thủ Đức",
+        city: "TP. Hồ Chí Minh",
+        address: "Đường Đỗ Xuân Hợp, P. Phú Hữu, TP. Thủ Đức",
+        totalUnits: 320,
+        availableUnits: 85,
+        priceRange: {
+            min: 850000000,
+            max: 1600000000,
+        },
+        startDate: "2024-08-01",
+        completionDate: "2026-06-30",
+        status: "SELLING" as const,
+        legalStatus: "Đã có sổ hồng",
+        amenities: ["Công viên", "Sân tennis", "BBQ", "Playground"],
+        images: [
+            "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=600&fit=crop&auto=format",
+            "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=800&h=600&fit=crop&auto=format",
+        ],
+        lotteryDate: "2025-03-10",
+        createdAt: "2024-08-01T00:00:00.000Z",
+        updatedAt: "2025-01-20T00:00:00.000Z",
+    },
+    {
+        id: "proj-3",
+        name: "Urban Valley",
+        slug: "urban-valley-primary",
+        description: "Khu đô thị hiện đại tại Bình Tân",
+        developer: "Kim Oanh Group",
+        district: "Bình Tân",
+        city: "TP. Hồ Chí Minh",
+        address: "Đường Tên Lửa, P. Bình Trị Đông B, Q. Bình Tân",
+        totalUnits: 280,
+        availableUnits: 42,
+        priceRange: {
+            min: 750000000,
+            max: 1400000000,
+        },
+        startDate: "2024-04-01",
+        completionDate: "2025-12-31",
+        status: "SELLING" as const,
+        legalStatus: "Đã có sổ hồng",
+        amenities: ["Trường học", "Bệnh viện", "Chợ"],
+        images: ["https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop&auto=format"],
+        lotteryDate: "2025-02-28",
+        createdAt: "2024-04-01T00:00:00.000Z",
+        updatedAt: "2025-01-20T00:00:00.000Z",
+    },
+];
+
+// PRIMARY MARKET: Available units from projects
+export const MOCK_UNITS = [
+    // Project 1 units
+    {
+        id: "unit-1",
+        projectId: "proj-1",
+        code: "A-0502",
+        floor: 5,
+        block: "A",
+        bedrooms: 2,
+        bathrooms: 2,
+        area: 65,
+        price: 980000000,
+        direction: "SOUTH" as const,
+        status: "AVAILABLE" as const,
+        images: ["https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&h=400&fit=crop&auto=format"],
+        features: ["Ban công", "View đẹp"],
+        floorPlan: undefined,
+        createdAt: "2024-06-01T00:00:00.000Z",
+        updatedAt: "2025-01-20T00:00:00.000Z",
+    },
+    {
+        id: "unit-2",
+        projectId: "proj-1",
+        code: "A-0805",
+        floor: 8,
+        block: "A",
+        bedrooms: 2,
+        bathrooms: 2,
+        area: 68,
+        price: 1020000000,
+        direction: "EAST" as const,
+        status: "AVAILABLE" as const,
+        images: ["https://images.unsplash.com/photo-1502672023488-70e25813eb80?w=600&h=400&fit=crop&auto=format"],
+        features: ["Thoáng mát"],
+        floorPlan: undefined,
+        createdAt: "2024-06-01T00:00:00.000Z",
+        updatedAt: "2025-01-20T00:00:00.000Z",
+    },
+    {
+        id: "unit-3",
+        projectId: "proj-1",
+        code: "B-1203",
+        floor: 12,
+        block: "B",
+        bedrooms: 3,
+        bathrooms: 2,
+        area: 85,
+        price: 1275000000,
+        direction: "SOUTH" as const,
+        status: "AVAILABLE" as const,
+        images: ["https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=400&fit=crop&auto=format"],
+        features: ["Rộng rãi"],
+        floorPlan: undefined,
+        createdAt: "2024-06-01T00:00:00.000Z",
+        updatedAt: "2025-01-20T00:00:00.000Z",
+    },
+    {
+        id: "unit-4",
+        projectId: "proj-1",
+        code: "A-0310",
+        floor: 3,
+        block: "A",
+        bedrooms: 2,
+        bathrooms: 1,
+        area: 62,
+        price: 930000000,
+        direction: "NORTH" as const,
+        status: "RESERVED" as const,
+        images: ["https://images.unsplash.com/photo-1560185127-6a7e8cb54d7c?w=600&h=400&fit=crop&auto=format"],
+        features: [],
+        floorPlan: undefined,
+        createdAt: "2024-06-01T00:00:00.000Z",
+        updatedAt: "2025-01-20T00:00:00.000Z",
+    },
+    {
+        id: "unit-5",
+        projectId: "proj-1",
+        code: "C-1501",
+        floor: 15,
+        block: "C",
+        bedrooms: 3,
+        bathrooms: 2,
+        area: 90,
+        price: 1350000000,
+        direction: "WEST" as const,
+        status: "AVAILABLE" as const,
+        images: ["https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=400&fit=crop&auto=format"],
+        features: ["View toàn cảnh"],
+        floorPlan: undefined,
+        createdAt: "2024-06-01T00:00:00.000Z",
+        updatedAt: "2025-01-20T00:00:00.000Z",
+    },
+
+    // Project 2 units
+    {
+        id: "unit-6",
+        projectId: "proj-2",
+        code: "T1-0702",
+        floor: 7,
+        block: "T1",
+        bedrooms: 2,
+        bathrooms: 2,
+        area: 70,
+        price: 1050000000,
+        direction: "EAST" as const,
+        status: "AVAILABLE" as const,
+        images: ["https://images.unsplash.com/photo-1560185127-6a7e8cb54d7c?w=600&h=400&fit=crop&auto=format"],
+        features: [],
+        floorPlan: undefined,
+        createdAt: "2024-08-01T00:00:00.000Z",
+        updatedAt: "2025-01-20T00:00:00.000Z",
+    },
+    {
+        id: "unit-7",
+        projectId: "proj-2",
+        code: "T2-1005",
+        floor: 10,
+        block: "T2",
+        bedrooms: 3,
+        bathrooms: 2,
+        area: 88,
+        price: 1408000000,
+        direction: "SOUTH" as const,
+        status: "AVAILABLE" as const,
+        images: ["https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&h=400&fit=crop&auto=format"],
+        features: ["Cao tầng"],
+        floorPlan: undefined,
+        createdAt: "2024-08-01T00:00:00.000Z",
+        updatedAt: "2025-01-20T00:00:00.000Z",
+    },
+    {
+        id: "unit-8",
+        projectId: "proj-2",
+        code: "T1-0408",
+        floor: 4,
+        block: "T1",
+        bedrooms: 2,
+        bathrooms: 2,
+        area: 66,
+        price: 990000000,
+        direction: "NORTH" as const,
+        status: "SOLD" as const,
+        images: ["https://images.unsplash.com/photo-1556909212-d5b604d0c90d?w=600&h=400&fit=crop&auto=format"],
+        features: [],
+        floorPlan: undefined,
+        createdAt: "2024-08-01T00:00:00.000Z",
+        updatedAt: "2025-01-20T00:00:00.000Z",
+    },
+    {
+        id: "unit-9",
+        projectId: "proj-2",
+        code: "T3-1201",
+        floor: 12,
+        block: "T3",
+        bedrooms: 3,
+        bathrooms: 2,
+        area: 92,
+        price: 1472000000,
+        direction: "WEST" as const,
+        status: "AVAILABLE" as const,
+        images: ["https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?w=600&h=400&fit=crop&auto=format"],
+        features: ["Premium"],
+        floorPlan: undefined,
+        createdAt: "2024-08-01T00:00:00.000Z",
+        updatedAt: "2025-01-20T00:00:00.000Z",
+    },
+
+    // Project 3 units
+    {
+        id: "unit-10",
+        projectId: "proj-3",
+        code: "P-0603",
+        floor: 6,
+        block: "P",
+        bedrooms: 2,
+        bathrooms: 1,
+        area: 60,
+        price: 900000000,
+        direction: "SOUTH" as const,
+        status: "AVAILABLE" as const,
+        images: ["https://images.unsplash.com/photo-1560448204-444092ad36d8?w=600&h=400&fit=crop&auto=format"],
+        features: [],
+        floorPlan: undefined,
+        createdAt: "2024-04-01T00:00:00.000Z",
+        updatedAt: "2025-01-20T00:00:00.000Z",
+    },
+    {
+        id: "unit-11",
+        projectId: "proj-3",
+        code: "P-0905",
+        floor: 9,
+        block: "P",
+        bedrooms: 2,
+        bathrooms: 2,
+        area: 67,
+        price: 1005000000,
+        direction: "EAST" as const,
+        status: "AVAILABLE" as const,
+        images: ["https://images.unsplash.com/photo-1560185009-dddeb820c7b7?w=600&h=400&fit=crop&auto=format"],
+        features: [],
+        floorPlan: undefined,
+        createdAt: "2024-04-01T00:00:00.000Z",
+        updatedAt: "2025-01-20T00:00:00.000Z",
+    },
+    {
+        id: "unit-12",
+        projectId: "proj-3",
+        code: "P-1102",
+        floor: 11,
+        block: "P",
+        bedrooms: 3,
+        bathrooms: 2,
+        area: 82,
+        price: 1148000000,
+        direction: "NORTH" as const,
+        status: "RESERVED" as const,
+        images: ["https://images.unsplash.com/photo-1484154218962-a197022b5858?w=600&h=400&fit=crop&auto=format"],
+        features: [],
+        floorPlan: undefined,
+        createdAt: "2024-04-01T00:00:00.000Z",
+        updatedAt: "2025-01-20T00:00:00.000Z",
+    },
+];
+
 export const MOCK_USERS = [
     {
         id: "1",
@@ -50,7 +362,8 @@ export const MOCK_USERS = [
     },
 ];
 
-export const MOCK_PROJECTS = [
+// SECONDARY MARKET: Listings (resale from individuals) - keeping old structure
+export const MOCK_PROJECTS_OLD = [
     {
         id: "1",
         name: "Kim Oanh Green Park",
@@ -122,7 +435,7 @@ export const MOCK_PROJECTS = [
     },
 ];
 
-export const MOCK_UNITS = [
+export const MOCK_UNITS_OLD = [
     // Kim Oanh Green Park
     {
         id: "1",
@@ -392,10 +705,6 @@ export function mockGetUnits(filters?: {
         filteredUnits = filteredUnits.filter((u) => u.bedrooms === filters.bedrooms);
     }
 
-    if (filters?.direction) {
-        filteredUnits = filteredUnits.filter((u) => u.direction === filters.direction);
-    }
-
     if (filters?.status) {
         filteredUnits = filteredUnits.filter((u) => u.status === filters.status);
     }
@@ -575,6 +884,12 @@ export const MOCK_LISTINGS = [
         id: "1",
         unitId: "4",
         sellerId: "7",
+        images: [
+            "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop",
+            "https://images.unsplash.com/photo-1502672260066-6bc35f0b1e1e?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=300&fit=crop",
+        ],
 
         title: "Chuyển nhượng căn B1-03 Kim Oanh Green Park",
         description: "Căn hộ đẹp, view công viên, đã hoàn thiện nội thất cơ bản. Giá tốt cho người thiện chí.",
@@ -600,6 +915,12 @@ export const MOCK_LISTINGS = [
         id: "2",
         unitId: "3",
         sellerId: "8",
+        images: [
+            "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop",
+            "https://images.unsplash.com/photo-1502672023488-70e25813eb80?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=400&h=300&fit=crop",
+        ],
 
         title: "Sang nhượng A2-05 - 3PN, view đẹp",
         description: "Căn góc 3 phòng ngủ, vị trí đẹp, giá hợp lý. Đang làm sổ hồng.",
@@ -621,6 +942,316 @@ export const MOCK_LISTINGS = [
         createdAt: "2025-11-08T08:00:00.000Z",
         updatedAt: "2025-11-10T08:00:00.000Z",
     },
+    {
+        id: "3",
+        unitId: "5",
+        sellerId: "7",
+        images: [
+            "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop",
+            "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=400&h=300&fit=crop",
+        ],
+
+        title: "Căn hộ 2PN tầng trung C3-12 - Giá rẻ",
+        description: "Căn hộ 65m², 2 phòng ngủ, hướng Đông Nam, view thoáng mát. Sổ hồng đầy đủ.",
+        price: 950000000,
+        negotiable: true,
+
+        legalStatus: "ĐỦ_SỔ" as const,
+        transferEligible: true,
+        transferEligibleDate: "2025-03-01",
+
+        originalPrice: 900000000,
+        purchaseDate: "2023-08-10",
+
+        status: "ACTIVE" as const,
+        publishedAt: "2025-11-05T14:30:00.000Z",
+        expiresAt: "2026-02-05T14:30:00.000Z",
+        viewCount: 312,
+
+        createdAt: "2025-11-03T14:30:00.000Z",
+        updatedAt: "2025-11-05T14:30:00.000Z",
+    },
+    {
+        id: "4",
+        unitId: "6",
+        sellerId: "8",
+        images: [
+            "https://images.unsplash.com/photo-1502005097973-6a7082348e28?w=800&h=600&fit=crop",
+            "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1505693314120-0d443867891c?w=400&h=300&fit=crop",
+        ],
+
+        title: "Bán gấp căn D1-08 tầng 8 - Nội thất đầy đủ",
+        description: "Căn 2PN đầy đủ nội thất cao cấp, máy lạnh, tủ bếp, giường tủ. Ở ngay không cần sửa chữa.",
+        price: 1150000000,
+        negotiable: true,
+
+        legalStatus: "ĐỦ_SỔ" as const,
+        transferEligible: true,
+        transferEligibleDate: "2025-05-15",
+
+        originalPrice: 1100000000,
+        purchaseDate: "2024-02-20",
+
+        status: "ACTIVE" as const,
+        publishedAt: "2025-11-12T09:00:00.000Z",
+        expiresAt: "2026-02-12T09:00:00.000Z",
+        viewCount: 189,
+
+        createdAt: "2025-11-10T09:00:00.000Z",
+        updatedAt: "2025-11-12T09:00:00.000Z",
+    },
+    {
+        id: "5",
+        unitId: "7",
+        sellerId: "7",
+        images: [
+            "https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=800&h=600&fit=crop",
+            "https://images.unsplash.com/photo-1556912173-46c336c7fd55?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop",
+        ],
+
+        title: "Căn 3PN E2-15 tầng cao - View sông tuyệt đẹp",
+        description: "Căn hộ 85m², 3 phòng ngủ, tầng 15, view sông Sài Gòn cực đẹp. Thiết kế thông minh, thoáng mát.",
+        price: 1650000000,
+        negotiable: false,
+
+        legalStatus: "ĐỦ_SỔ" as const,
+        transferEligible: true,
+        transferEligibleDate: "2025-07-01",
+
+        originalPrice: 1600000000,
+        purchaseDate: "2024-06-10",
+
+        status: "ACTIVE" as const,
+        publishedAt: "2025-11-08T11:00:00.000Z",
+        expiresAt: "2026-02-08T11:00:00.000Z",
+        viewCount: 267,
+
+        createdAt: "2025-11-06T11:00:00.000Z",
+        updatedAt: "2025-11-08T11:00:00.000Z",
+    },
+    {
+        id: "6",
+        unitId: "8",
+        sellerId: "8",
+        images: [
+            "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop",
+            "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=400&h=300&fit=crop",
+        ],
+
+        title: "Chuyển nhượng gấp F1-20 - Giá tốt nhất khu vực",
+        description: "Chủ cần tiền bán gấp căn 2PN, nội thất cơ bản, giá rẻ hơn thị trường 100 triệu.",
+        price: 880000000,
+        negotiable: true,
+
+        legalStatus: "ĐỦ_SỔ" as const,
+        transferEligible: true,
+        transferEligibleDate: "2025-04-01",
+
+        originalPrice: 850000000,
+        purchaseDate: "2023-10-05",
+
+        status: "ACTIVE" as const,
+        publishedAt: "2025-11-14T16:20:00.000Z",
+        expiresAt: "2026-02-14T16:20:00.000Z",
+        viewCount: 421,
+
+        createdAt: "2025-11-13T16:20:00.000Z",
+        updatedAt: "2025-11-14T16:20:00.000Z",
+    },
+    {
+        id: "7",
+        unitId: "1",
+        sellerId: "7",
+        images: [
+            "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800&h=600&fit=crop",
+            "https://images.unsplash.com/photo-1600210492493-0946911123ea?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1600210491369-e753d80a41f3?w=400&h=300&fit=crop",
+        ],
+
+        title: "Căn góc 3PN G2-07 - Vị trí VIP Block G",
+        description: "Căn góc 90m², 3PN 2WC, ban công rộng, ánh sáng tự nhiên cả ngày. Đã hoàn thiện sang trọng.",
+        price: 1750000000,
+        negotiable: true,
+
+        legalStatus: "ĐỦ_SỔ" as const,
+        transferEligible: true,
+        transferEligibleDate: "2025-08-15",
+
+        originalPrice: 1700000000,
+        purchaseDate: "2024-07-25",
+
+        status: "ACTIVE" as const,
+        publishedAt: "2025-11-07T10:15:00.000Z",
+        expiresAt: "2026-02-07T10:15:00.000Z",
+        viewCount: 198,
+
+        createdAt: "2025-11-05T10:15:00.000Z",
+        updatedAt: "2025-11-07T10:15:00.000Z",
+    },
+    {
+        id: "8",
+        unitId: "2",
+        sellerId: "8",
+        images: [
+            "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&h=600&fit=crop",
+            "https://images.unsplash.com/photo-1600047509358-9dc75507daeb?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1600047509782-20d39509f26d?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1600047508788-786f8a39a1e6?w=400&h=300&fit=crop",
+        ],
+
+        title: "Căn hộ H1-11 tầng 11 - Hướng Bắc mát mẻ",
+        description: "2 phòng ngủ, hướng Bắc mát mẻ quanh năm. Gần trường học, siêu thị. Phù hợp gia đình trẻ.",
+        price: 1020000000,
+        negotiable: true,
+
+        legalStatus: "ĐANG_LÀM_SỔ" as const,
+        transferEligible: false,
+        transferEligibleDate: "2026-03-01",
+
+        originalPrice: 1000000000,
+        purchaseDate: "2024-11-15",
+
+        status: "ACTIVE" as const,
+        publishedAt: "2025-11-11T13:45:00.000Z",
+        expiresAt: "2026-02-11T13:45:00.000Z",
+        viewCount: 156,
+
+        createdAt: "2025-11-09T13:45:00.000Z",
+        updatedAt: "2025-11-11T13:45:00.000Z",
+    },
+    {
+        id: "9",
+        unitId: "4",
+        sellerId: "7",
+        images: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop",
+            "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=400&h=300&fit=crop",
+        ],
+
+        title: "Penthouse I3-25 tầng 25 - Căn duy nhất",
+        description: "Penthouse 120m², tầng 25, view 360 độ toàn cảnh thành phố. Thiết kế duplex sang trọng.",
+        price: 2500000000,
+        negotiable: false,
+
+        legalStatus: "ĐỦ_SỔ" as const,
+        transferEligible: true,
+        transferEligibleDate: "2025-09-01",
+
+        originalPrice: 2400000000,
+        purchaseDate: "2024-08-30",
+
+        status: "ACTIVE" as const,
+        publishedAt: "2025-11-06T08:30:00.000Z",
+        expiresAt: "2026-02-06T08:30:00.000Z",
+        viewCount: 534,
+
+        createdAt: "2025-11-04T08:30:00.000Z",
+        updatedAt: "2025-11-06T08:30:00.000Z",
+    },
+    {
+        id: "10",
+        unitId: "5",
+        sellerId: "8",
+        images: [
+            "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&h=600&fit=crop",
+            "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1600566752229-250ed79c2c7a?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1600566753151-384129cf4e3e?w=400&h=300&fit=crop",
+        ],
+
+        title: "Căn 2PN J1-06 - Smart Home đầy đủ",
+        description: "Căn hộ thông minh, điều khiển bằng giọng nói, camera an ninh. Nội thất hiện đại, sang trọng.",
+        price: 1280000000,
+        negotiable: true,
+
+        legalStatus: "ĐỦ_SỔ" as const,
+        transferEligible: true,
+        transferEligibleDate: "2025-06-20",
+
+        originalPrice: 1250000000,
+        purchaseDate: "2024-05-10",
+
+        status: "ACTIVE" as const,
+        publishedAt: "2025-11-13T15:00:00.000Z",
+        expiresAt: "2026-02-13T15:00:00.000Z",
+        viewCount: 223,
+
+        createdAt: "2025-11-11T15:00:00.000Z",
+        updatedAt: "2025-11-13T15:00:00.000Z",
+    },
+    {
+        id: "11",
+        unitId: "6",
+        sellerId: "7",
+        images: [
+            "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&h=600&fit=crop",
+            "https://images.unsplash.com/photo-1600607687644-aab4f92099c5?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1600607688960-e095ff83135c?w=400&h=300&fit=crop",
+        ],
+
+        title: "Căn studio K2-04 - Lý tưởng cho người độc thân",
+        description: "Studio 35m², thiết kế tối ưu không gian. Đầy đủ tiện nghi, giá cả phải chăng cho sinh viên, người đi làm.",
+        price: 650000000,
+        negotiable: true,
+
+        legalStatus: "ĐỦ_SỔ" as const,
+        transferEligible: true,
+        transferEligibleDate: "2025-02-15",
+
+        originalPrice: 620000000,
+        purchaseDate: "2023-06-20",
+
+        status: "ACTIVE" as const,
+        publishedAt: "2025-11-15T12:00:00.000Z",
+        expiresAt: "2026-02-15T12:00:00.000Z",
+        viewCount: 389,
+
+        createdAt: "2025-11-14T12:00:00.000Z",
+        updatedAt: "2025-11-15T12:00:00.000Z",
+    },
+    {
+        id: "12",
+        unitId: "7",
+        sellerId: "8",
+        images: [
+            "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=600&fit=crop",
+            "https://images.unsplash.com/photo-1600563438938-a650a5f2a7f8?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=400&h=300&fit=crop",
+            "https://images.unsplash.com/photo-1600563440091-a0bf08f9d21d?w=400&h=300&fit=crop",
+        ],
+
+        title: "Căn 4PN L1-18 - Rộng rãi cho gia đình đông người",
+        description: "Căn hộ 110m², 4 phòng ngủ, 3 WC. Phù hợp gia đình 3 thế hệ. Thiết kế thông thoáng, đầy đủ ánh sáng.",
+        price: 1980000000,
+        negotiable: true,
+
+        legalStatus: "ĐỦ_SỔ" as const,
+        transferEligible: true,
+        transferEligibleDate: "2025-10-01",
+
+        originalPrice: 1950000000,
+        purchaseDate: "2024-09-15",
+
+        status: "ACTIVE" as const,
+        publishedAt: "2025-11-09T14:20:00.000Z",
+        expiresAt: "2026-02-09T14:20:00.000Z",
+        viewCount: 176,
+
+        createdAt: "2025-11-07T14:20:00.000Z",
+        updatedAt: "2025-11-09T14:20:00.000Z",
+    },
 ];
 
 // ========================================
@@ -635,10 +1266,12 @@ export const MOCK_TRANSACTIONS = [
         sellerId: "7",
 
         agreedPrice: 1050000000,
+        propertyPrice: 1050000000,
         depositAmount: 50000000,
         depositPaidAt: "2025-11-12T10:00:00.000Z",
 
         transferTax: 21000000,
+        taxAmount: 21000000,
         serviceFee: 10500000,
         otherFees: 2000000,
         totalAmount: 1083500000,
@@ -646,12 +1279,49 @@ export const MOCK_TRANSACTIONS = [
         paymentMethod: "BANK_TRANSFER" as const,
         paymentStatus: "PARTIAL" as const,
 
+        contractUrl: "/contracts/contract-tx-1.pdf",
+
         status: "DEPOSIT_PAID" as const,
 
         initiatedAt: "2025-11-12T09:00:00.000Z",
+        paymentCompletedAt: undefined,
+        documentSignedAt: undefined,
+        completedAt: undefined,
 
         createdAt: "2025-11-12T09:00:00.000Z",
         updatedAt: "2025-11-12T10:00:00.000Z",
+    },
+    {
+        id: "2",
+        listingId: "2",
+        buyerId: "4",
+        sellerId: "7",
+
+        agreedPrice: 900000000,
+        propertyPrice: 900000000,
+        depositAmount: 45000000,
+        depositPaidAt: "2025-10-01T10:00:00.000Z",
+
+        transferTax: 18000000,
+        taxAmount: 18000000,
+        serviceFee: 9000000,
+        otherFees: 1500000,
+        totalAmount: 928500000,
+
+        paymentMethod: "BANK_TRANSFER" as const,
+        paymentStatus: "COMPLETED" as const,
+
+        contractUrl: "/contracts/contract-tx-2.pdf",
+
+        status: "COMPLETED" as const,
+
+        initiatedAt: "2025-10-01T09:00:00.000Z",
+        paymentCompletedAt: "2025-10-15T14:00:00.000Z",
+        documentSignedAt: "2025-10-20T10:00:00.000Z",
+        completedAt: "2025-11-01T11:00:00.000Z",
+
+        createdAt: "2025-10-01T09:00:00.000Z",
+        updatedAt: "2025-11-01T11:00:00.000Z",
     },
 ];
 
@@ -747,144 +1417,4 @@ export function mockGetTransactions(filters?: { buyerId?: string; sellerId?: str
         limit,
         totalPages: Math.ceil(filtered.length / limit),
     };
-}
-
-// ========================================
-// MARKETPLACE MOCK DATA
-// ========================================
-
-export const MOCK_MARKETPLACE_LISTINGS = [
-    {
-        id: "ML001",
-        unitId: "1",
-        sellerId: "5",
-        sellerName: "Nguyễn Văn Seller",
-        sellerPhone: "0901234567",
-        title: "Căn hộ 2PN view công viên - Kim Oanh Green Park",
-        description: "Căn hộ đẹp, view công viên, đã hoàn thiện nội thất cơ bản. Sổ hồng riêng, pháp lý đầy đủ. Khu vực an ninh, gần trường học và siêu thị.",
-        listingPrice: 950000000,
-        originalPrice: 900000000,
-        pricePerSqm: 15800000,
-        listedAt: "2024-11-01T10:00:00Z",
-        status: "ACTIVE" as const,
-        legalStatus: "ĐỦ_SỔ" as const,
-        transferEligible: true,
-        images: [
-            "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800",
-            "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800",
-            "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800",
-        ],
-        viewCount: 245,
-        verificationStatus: "VERIFIED" as const,
-        availableFrom: "2024-12-01",
-        negotiable: true,
-        createdAt: "2024-11-01T10:00:00Z",
-        updatedAt: "2024-11-01T10:00:00Z",
-    },
-    {
-        id: "ML002",
-        unitId: "2",
-        sellerId: "6",
-        sellerName: "Trần Thị Buyer",
-        sellerPhone: "0912345678",
-        title: "3PN hướng Đông Nam - Kim Oanh Green Park",
-        description: "3PN rộng rãi, hướng Đông Nam đón gió. Khu vực yên tĩnh, an ninh tốt. Gần trung tâm thương mại và bệnh viện.",
-        listingPrice: 1250000000,
-        originalPrice: 1200000000,
-        pricePerSqm: 17857000,
-        listedAt: "2024-10-28T14:30:00Z",
-        status: "ACTIVE" as const,
-        legalStatus: "ĐANG_LÀM_SỔ" as const,
-        transferEligible: true,
-        transferEligibleDate: "2025-01-15",
-        images: ["https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800", "https://images.unsplash.com/photo-1556912167-f556f1f39faa?w=800"],
-        viewCount: 189,
-        verificationStatus: "VERIFIED" as const,
-        availableFrom: "2024-11-20",
-        negotiable: true,
-        createdAt: "2024-10-28T14:30:00Z",
-        updatedAt: "2024-10-28T14:30:00Z",
-    },
-    {
-        id: "ML003",
-        unitId: "5",
-        sellerId: "7",
-        sellerName: "Lê Minh Premium",
-        sellerPhone: "0923456789",
-        title: "Penthouse sang trọng - Kim Oanh Luxury",
-        description: "Penthouse sang trọng, view toàn cảnh thành phố. Full nội thất cao cấp, thiết kế hiện đại. Vị trí đắc địa, pháp lý hoàn chỉnh.",
-        listingPrice: 2600000000,
-        originalPrice: 2500000000,
-        pricePerSqm: 26000000,
-        listedAt: "2024-11-05T09:00:00Z",
-        status: "ACTIVE" as const,
-        legalStatus: "ĐỦ_SỔ" as const,
-        transferEligible: true,
-        images: [
-            "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800",
-            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
-            "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800",
-        ],
-        viewCount: 421,
-        verificationStatus: "VERIFIED" as const,
-        availableFrom: "Ngay",
-        negotiable: false,
-        createdAt: "2024-11-05T09:00:00Z",
-        updatedAt: "2024-11-05T09:00:00Z",
-    },
-];
-
-export const MOCK_WISHLISTS = [
-    {
-        id: "WL001",
-        userId: "4", // buyer user
-        listingId: "ML001",
-        addedAt: "2024-11-10T15:30:00Z",
-    },
-    {
-        id: "WL002",
-        userId: "4",
-        listingId: "ML003",
-        addedAt: "2024-11-12T10:20:00Z",
-    },
-];
-
-// Mock function to get marketplace listings
-export function mockGetMarketplaceListings(filters?: { search?: string; minPrice?: number; maxPrice?: number; bedrooms?: number; status?: string; page?: number; limit?: number }) {
-    let filtered = [...MOCK_MARKETPLACE_LISTINGS];
-
-    if (filters?.search) {
-        const searchLower = filters.search.toLowerCase();
-        filtered = filtered.filter((l) => l.title.toLowerCase().includes(searchLower) || l.description.toLowerCase().includes(searchLower));
-    }
-
-    if (filters?.minPrice) {
-        filtered = filtered.filter((l) => l.listingPrice >= filters.minPrice!);
-    }
-
-    if (filters?.maxPrice) {
-        filtered = filtered.filter((l) => l.listingPrice <= filters.maxPrice!);
-    }
-
-    if (filters?.status) {
-        filtered = filtered.filter((l) => l.status === filters.status);
-    }
-
-    const page = filters?.page || 1;
-    const limit = filters?.limit || 12;
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-
-    return {
-        data: filtered.slice(startIndex, endIndex),
-        total: filtered.length,
-        page,
-        limit,
-        totalPages: Math.ceil(filtered.length / limit),
-    };
-}
-
-// Mock function to get wishlists
-export function mockGetWishlists(userId: string) {
-    return MOCK_WISHLISTS.filter((w) => w.userId === userId);
 }

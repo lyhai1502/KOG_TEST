@@ -53,7 +53,7 @@ export function ProjectList({ projects, isLoading, pagination }: ProjectListProp
         <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {projects.map((project) => (
-                    <Card key={project.id} className="hover:shadow-lg transition-shadow">
+                    <Card key={project.id} className="hover:shadow-lg transition-all duration-300">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Building2 className="h-5 w-5 text-primary" />

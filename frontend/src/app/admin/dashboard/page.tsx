@@ -53,13 +53,13 @@ export default function AdminDashboardPage() {
                         }
                     }}
                 />
-                <main className="flex-1 p-6">
+                <main className="flex-1 px-6 py-8">
                     <div className="max-w-7xl mx-auto space-y-6">
                         {/* Welcome Section */}
                         <div className="flex items-center justify-between">
                             <div>
-                                <h1 className="text-3xl font-bold text-gray-900">🎯 Admin Dashboard</h1>
-                                <p className="text-gray-600 mt-1">Xin chào, {user?.name}! Quản lý toàn bộ hệ thống NOXH</p>
+                                <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
+                                <p className="text-gray-600">Xin chào, {user?.name}! Quản lý toàn bộ hệ thống NOXH</p>
                             </div>
                         </div>
 
@@ -145,7 +145,7 @@ export default function AdminDashboardPage() {
                                 </div>
 
                                 {/* Admin Info */}
-                                <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+                                <Card className="border-l-4 border-l-blue-500 bg-white">
                                     <CardHeader>
                                         <CardTitle className="flex items-center gap-2">
                                             <Users className="h-5 w-5 text-blue-600" />

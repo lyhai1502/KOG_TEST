@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 export default function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
-    const { isAuthenticated, user, checkSession } = useAuthStore();
+    const { isAuthenticated, user } = useAuthStore();
     const [isHydrated, setIsHydrated] = useState(false);
 
     useEffect(() => {
@@ -20,9 +20,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
 
         // Delay check để đảm bảo store đã load từ localStorage
         const initCheck = setTimeout(() => {
-            const isValid = checkSession();
-
-            if (!isValid || !isAuthenticated) {
+            if (!isAuthenticated) {
                 router.push("/login");
                 return;
             }
@@ -34,20 +32,10 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
             }
         }, 100);
 
-        // Check session mỗi 30 giây
-        const interval = setInterval(() => {
-            const isStillValid = checkSession();
-            if (!isStillValid) {
-                toast.error("Phiên đăng nhập đã hết hạn (5 phút). Vui lòng đăng nhập lại.");
-                router.push("/login");
-            }
-        }, 30000); // 30 seconds
-
         return () => {
             clearTimeout(initCheck);
-            clearInterval(interval);
         };
-    }, [isHydrated, isAuthenticated, user, checkSession, router]);
+    }, [isHydrated, isAuthenticated, user, router]);
 
     if (!isHydrated || !isAuthenticated || user?.role !== "ADMIN") {
         return null;
